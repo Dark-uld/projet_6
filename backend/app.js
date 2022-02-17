@@ -1,7 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+// iMPORTE ROUTES
+const userRoutes = require('./routes/user');
 
+
+// CONNECTION SUR SERVEUR MONGOOSE
 mongoose.connect('mongodb+srv://darkul75:5CqnGAPTE2rjYsq@cluster0.eobu0.mongodb.net/test?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
@@ -14,7 +18,7 @@ const app = express();
 
 
 app.use(express.json());
-// MIDDLEWARE DOIT AVOIR UNE REQUEST ET UNE RESPONSE, 
+
 app.use((req, res, next) => {
  // SOLUTIONNER PROBLEME CROSS ORIGIN CORS
 //d'accéder à notre API depuis n'importe quelle origine 
@@ -27,5 +31,9 @@ app.use((req, res, next) => {
     // NEXT POUR PASSER AU PROCHAIN MIDDLEWARE
     next();
 });
+
+// ENREGISTRE ROUTER POUR TOUTE DEMANDE API STUFF
+app.use('/api/auth', userRoutes);
+
 
 module.exports = app;
