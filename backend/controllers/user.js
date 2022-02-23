@@ -2,8 +2,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require ('../models/User');
 
+require('dotenv').config();
 
-const saltRounds = 12;
+
+const saltRounds = process.env.numberOfSalt*1;
 // ENREGISTREMENT DE NOVUEAU UTILISATEUR
 
 exports.signup = (req, res, next) => {
