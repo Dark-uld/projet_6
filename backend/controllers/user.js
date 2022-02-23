@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require ('../models/User');
 
 
-const saltRounds = 10;
+const saltRounds = 12;
 // ENREGISTREMENT DE NOVUEAU UTILISATEUR
 
 exports.signup = (req, res, next) => {
@@ -22,6 +22,7 @@ exports.signup = (req, res, next) => {
       })
   })
   .catch(error => res.status(500).json({ error }))
+  
 };
 
 
