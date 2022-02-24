@@ -1,12 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+require('dotenv').config();
+
+
 // iMPORTE ROUTES
 const userRoutes = require('./routes/user');
 
 
 // CONNECTION SUR SERVEUR MONGOOSE
-mongoose.connect('mongodb+srv://darkul75:5CqnGAPTE2rjYsq@cluster0.eobu0.mongodb.net/test?retryWrites=true&w=majority',
+mongoose.connect(process.env.serverDataBaseLink,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -32,7 +35,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// ENREGISTRE ROUTER POUR TOUTE DEMANDE API STUFF
+// ENREGISTRE ROUTER POUR TOUTE DEMANDE API 
 app.use('/api/auth', userRoutes);
 
 

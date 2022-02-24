@@ -4,7 +4,6 @@ const User = require ('../models/User');
 
 require('dotenv').config();
 
-
 const saltRounds = process.env.numberOfSalt*1;
 // ENREGISTREMENT DE NOVUEAU UTILISATEUR
 
@@ -48,7 +47,7 @@ exports.login = (req, res, next) => {
             userId: user._id,
             token: jwt.sign(
                 { userId: user._id },
-                'RF$y~Qc{u;9X<._>^qU=KbG@~Th&M@R2,A*(^#Eb!/uSY&6js<a6]UE`h3Mw@qH]quJ%Ju54pD"\\_@Pb[=.GStu-$c7U),qB4&#\+b!bBRQH!4&Xjk:W&K(US8MJ8U/',
+                 process.env.secretToken,
                 { expiresIn: '24h' }
               )
           });
