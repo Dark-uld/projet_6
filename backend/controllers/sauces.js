@@ -1,18 +1,24 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
 
+// créer une sauce
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
   const sauce = new Sauce({
     ...sauceObject,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    likes: 0,
+    dislikes: 0,
+    usersLiked: [],
+    usersDisliked: [],
   });
   sauce.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
     .catch(error => res.status(400).json({ error }));
 };
 
+// recupérer toutes les sauces
 exports.getAllSauce = (req, res, next) => {
   Sauce.find().then(
     (sauces) => {
@@ -27,6 +33,8 @@ exports.getAllSauce = (req, res, next) => {
   );
 };
 
+
+// Selectionné une sauce spécifique
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({
     _id: req.params.id
@@ -43,6 +51,7 @@ exports.getOneSauce = (req, res, next) => {
   );
 };
 
+// Modification de la sauce
 exports.modifySauce = (req, res, next) => {
   // test si il y a une nouvelle image
   const sauceObject = req.file ?
@@ -55,4 +64,19 @@ exports.modifySauce = (req, res, next) => {
   Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
     .then(() => res.status(200).json({ message: 'Objet modifié !'}))
     .catch(error => res.status(400).json({ error }));
+};
+
+// Supprimer une sauce
+exports.deleteSauce = (req, res, next) => {
+  Sauce.findOne({ _id: req.params.id })
+    .then(sauce => {
+      const filename = sauce.imageUrl.split('/images/')[1];
+      // unlink pour supprimer un fichier
+      fs.unlink(`images/${filename}`, () => {
+        Sauce.deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+          .catch(error => res.status(400).json({ error }));
+      });
+    })
+    .catch(error => res.status(500).json({ error }));
 };
