@@ -5,7 +5,10 @@ require('dotenv').config();
 
 
 // iMPORTE ROUTES
+
+const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
+const path = require('path');
 
 
 // CONNECTION SUR SERVEUR MONGOOSE
@@ -37,6 +40,8 @@ app.use((req, res, next) => {
 
 // ENREGISTRE ROUTER POUR TOUTE DEMANDE API 
 app.use('/api/auth', userRoutes);
+app.use("/api/sauces", sauceRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 module.exports = app;
