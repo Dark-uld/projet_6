@@ -5,7 +5,6 @@ require('dotenv').config();
 
 
 // iMPORTE ROUTES
-
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 const path = require('path');
