@@ -11,7 +11,7 @@ exports.createSauce = (req, res, next) => {
     likes: 0,
     dislikes: 0,
     usersLiked: [],
-    usersDisliked: [],
+    usersDisliked: []
   });
   sauce.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
