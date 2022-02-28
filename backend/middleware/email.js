@@ -7,6 +7,6 @@ module.exports = (req, res, next) => {
     } else{
         return res
             .status(400)
-            .json({error : "L'email est inccorect"})
+            .json({error : "L'email est incorrect"})
     }
 }
