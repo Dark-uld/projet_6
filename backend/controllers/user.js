@@ -8,8 +8,7 @@ const saltRounds = process.env.numberOfSalt*1;
 // ENREGISTREMENT DE NOVUEAU UTILISATEUR
 
 exports.signup = (req, res, next) => {
-  bcrypt.genSalt(saltRounds).then(salt => {
-    bcrypt.hash(req.body.password, salt)
+    bcrypt.hash(req.body.password, saltRounds)
     // on recupe hash et on crée un nouvel utilisateur avec model mongoose avec mail et mdp hash
       .then(hash => {
         const user = new User({
@@ -21,7 +20,7 @@ exports.signup = (req, res, next) => {
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
           .catch(error => res.status(400).json({ error }));
       })
-  })
+  
   .catch(error => res.status(500).json({ error }))
   
 };

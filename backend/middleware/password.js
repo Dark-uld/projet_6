@@ -1,4 +1,18 @@
 var passwordValidator = require('password-validator');
+const fs = require('fs');
+
+let listPassword = [];
+
+fs.readFile('./middleware/passwordList.txt', function(err, data) {
+    if(err) throw err;
+
+    const arr = data.toString().replace(/\r\n/g,'\n').split('\n');
+
+    for(let i of arr) {
+        listPassword.push(i);
+    }
+});
+
 
 // Create a schema
 var passwordSchema = new passwordValidator();
@@ -11,7 +25,7 @@ passwordSchema
 .has().lowercase()                              // Must have lowercase letters
 .has().digits(2)                                // Must have at least 2 digits
 .has().not().spaces()                           // Should not have spaces
-.is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
+.is().not().oneOf(listPassword); // Blacklist these values
 
 
 module.exports = (req, res, next) => {
