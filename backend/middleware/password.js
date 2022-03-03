@@ -34,6 +34,6 @@ module.exports = (req, res, next) => {
     } else{
         return res
             .status(400)
-            .json({error : "Le mot de passe nest pas assez fort" + passwordSchema.valide('req.body.password', { list: true })})
+            .json({error : "Le mot de passe nest pas assez fort" + passwordSchema.validate('req.body.password', { list: true })})
     }
 }

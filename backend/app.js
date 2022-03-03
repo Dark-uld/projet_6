@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require("helmet");
 
 require('dotenv').config();
 
@@ -21,6 +22,8 @@ mongoose.connect(process.env.serverDataBaseLink,
 // INSTALLATION EXPRESS
 const app = express();
 
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 app.use(express.json());
 
