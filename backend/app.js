@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require("helmet");
+const { RateLimiterMongo } = require('rate-limiter-flexible');
+
 
 require('dotenv').config();
 
@@ -12,11 +14,12 @@ const path = require('path');
 
 
 // CONNECTION SUR SERVEUR MONGOOSE
-mongoose.connect(process.env.serverDataBaseLink,
+mongoose.connect('mongodb+srv://'+process.env.accName+':'+process.env.accPwd+'@cluster0.eobu0.mongodb.net/test?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
+
 
 
 // INSTALLATION EXPRESS
