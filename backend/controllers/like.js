@@ -7,7 +7,6 @@ const fs = require('fs');
 // Modification de la sauce
 exports.modifyLike = (req, res, next) => {
     // récupérer l'id dans l'url de la requete
-
     Sauce.findOne({
       _id: req.params.id
     }).then(

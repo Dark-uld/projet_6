@@ -19,6 +19,22 @@ mongoose.connect('mongodb+srv://'+process.env.accName+':'+process.env.accPwd+'@c
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
+const mongoConn = mongoose.connection;
+
+const opts = {
+  storeClient: mongoConn,
+  points: 10, // Number of points
+  duration: 1, // Per second(s)
+};
+  
+const rateLimiterMongo = new RateLimiterMongo(opts);
+rateLimiterMongo.consume('127.0.0.1:8081', 2) // consume 2 points
+  .then((rateLimiterRes) => {
+    // 2 points consumed
+  })
+  .catch((rateLimiterRes) => {
+    // Not enough points to consume
+});
 
 
 
