@@ -12,6 +12,7 @@ exports.modifyLike = (req, res, next) => {
     }).then(
       (sauce) => {
         // Ajout d'un like 
+        // verification non présence de l'user dans la liste des like et si requete est un like
         if (!sauce.usersLiked.includes(req.body.userId) && req.body.like === 1){
             Sauce
             .updateOne(
@@ -25,6 +26,7 @@ exports.modifyLike = (req, res, next) => {
             .catch(error => res.status(400).json({ error })); 
         } 
         // Retirer un like
+        // verification  présence de l'user dans la liste des like et si requete est un déjà like
         if (sauce.usersLiked.includes(req.body.userId) && req.body.like === 0){
             Sauce
             .updateOne(
@@ -38,6 +40,7 @@ exports.modifyLike = (req, res, next) => {
             .catch(error => res.status(400).json({ error })); 
         } 
         // Ajout d'un dislike 
+        // verification non présence de l'user dans la liste des dislike et si requete est un dislike
         if (!sauce.usersDisliked.includes(req.body.userId) && req.body.like === -1){
             Sauce
             .updateOne(
@@ -51,6 +54,7 @@ exports.modifyLike = (req, res, next) => {
             .catch(error => res.status(400).json({ error })); 
         } 
         // Retirer un dislike
+        // verification présence de l'user dans la liste des dislike et si requete est un déjà dislike
         if (sauce.usersDisliked.includes(req.body.userId) && req.body.like === 0){
             Sauce
             .updateOne(
