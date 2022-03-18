@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require("helmet");
-const { RateLimiterMongo } = require('rate-limiter-flexible');
+const rateLimit = require('express-rate-limit')
+
 
 
 require('dotenv').config();
@@ -19,23 +20,22 @@ mongoose.connect('mongodb+srv://'+process.env.accName+':'+process.env.accPwd+'@c
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
-const mongoConn = mongoose.connection;
 
-const opts = {
-  storeClient: mongoConn,
-  points: 10, // Number of points
-  duration: 1, // Per second(s)
-};
-  
-const rateLimiterMongo = new RateLimiterMongo(opts);
-rateLimiterMongo.consume('127.0.0.1:8081', 2) // consume 2 points
-  .then((rateLimiterRes) => {
-    // 2 points consumed
-  })
-  .catch((rateLimiterRes) => {
-    // Not enough points to consume
-});
+const limiter = rateLimit({
+  windowMs: 5*60 * 1000, // 5 minutes
+  max: 50, // limite de création de requete à 50 toutes les 5 minutes
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
 
+const createAccountLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5, // création de compte limité à 5 toutes les minutes
+  message:
+    'Too many accounts created from this IP, please try again after an hour',
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
 
 
 // INSTALLATION EXPRESS
@@ -60,8 +60,8 @@ app.use((req, res, next) => {
 });
 
 // ENREGISTRE ROUTER POUR TOUTE DEMANDE API 
-app.use('/api/auth', userRoutes);
-app.use("/api/sauces", sauceRoutes);
+app.use('/api/auth', createAccountLimiter, userRoutes);
+app.use("/api/sauces", limiter,  sauceRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
