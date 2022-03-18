@@ -7,6 +7,8 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 //middleware pour l'image
 const multer = require('../middleware/multer-config');
+//middleware pour verifier input du formulaire
+const validateInput = require('../middleware/validateInput');
 
 
 // appel du model mongoose dans ce fichier
@@ -16,11 +18,11 @@ const likeCtrl = require ('../controllers/like')
 // Route Affichage de toutes les sauces
 router.get('/', auth, sauceCtrl.getAllSauce);
 // Route Creation d'une sauce
-router.post('/', auth, multer, sauceCtrl.createSauce);
+router.post('/', auth, multer, validateInput.newSauce, sauceCtrl.createSauce);
 // Route Affichage d'une sauce
 router.get('/:id', auth, sauceCtrl.getOneSauce);
 // Route Modification d'une sauce
-router.put('/:id', auth, multer, sauceCtrl.modifySauce);
+router.put('/:id', auth, multer, validateInput.modifySauce,sauceCtrl.modifySauce);
 // Route Supression d'une sauce
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
 // Route  Modification des likes/dislikes d'une sauce
